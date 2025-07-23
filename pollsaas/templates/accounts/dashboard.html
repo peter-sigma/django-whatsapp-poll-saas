@@ -1,0 +1,151 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard - PollSaaS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">
+                    <i class="fas fa-tachometer-alt text-primary me-2"></i>
+                    Dashboard
+                </h1>
+                <p class="text-muted mb-0">Welcome back, {{ user.username }}!</p>
+            </div>
+            <div>
+                {% if user.can_create_poll %}
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Create New Poll
+                    </a>
+                {% else %}
+                    <a href="#" class="btn btn-warning">
+                        <i class="fas fa-crown me-2"></i>Upgrade to Pro
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">{{ polls_created }}</h4>
+                        <small>Polls Created</small>
+                    </div>
+                    <i class="fas fa-poll fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">{{ total_votes }}</h4>
+                        <small>Total Votes</small>
+                    </div>
+                    <i class="fas fa-vote-yea fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card {% if user.is_premium_active %}bg-warning{% else %}bg-secondary{% endif %} text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">
+                            {% if user.is_premium_active %}PRO{% else %}FREE{% endif %}
+                        </h6>
+                        <small>Account Type</small>
+                    </div>
+                    <i class="fas fa-{% if user.is_premium_active %}crown{% else %}user{% endif %} fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">
+                            {% if user.is_premium_active %}∞{% else %}{{ polls_remaining }}{% endif %}
+                        </h4>
+                        <small>Polls Remaining</small>
+                    </div>
+                    <i class="fas fa-plus-circle fa-2x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Status -->
+{% if not user.is_premium_active and polls_remaining == 0 %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle me-3 fa-2x"></i>
+                <div class="flex-grow-1">
+                    <h5 class="alert-heading mb-1">Poll Limit Reached</h5>
+                    <p class="mb-2">You've used your free poll. Upgrade to Pro for unlimited polls and advanced features!</p>
+                    <a href="#" class="btn btn-warning btn-sm">
+                        <i class="fas fa-crown me-1"></i>Upgrade Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Recent Polls -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Your Polls
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if polls_created > 0 %}
+                    <!-- Polls will be listed here once we create the poll model -->
+                    <div class="text-center py-4">
+                        <i class="fas fa-poll fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Your polls will appear here</h5>
+                        <p class="text-muted">We'll implement the poll listing in Day 3!</p>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-poll fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">No polls yet</h4>
+                        <p class="text-muted mb-4">Create your first poll to get started with WhatsApp polling!</p>
+                        {% if user.can_create_poll %}
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create Your First Poll
+                            </a>
+                        {% else %}
+                            <a href="#" class="btn btn-warning">
+                                <i class="fas fa-crown me-2"></i>Upgrade to Create Polls
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

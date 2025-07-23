@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Will add app URLs in coming days:
     # path('', include('polls.urls')),
-    # path('accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 
