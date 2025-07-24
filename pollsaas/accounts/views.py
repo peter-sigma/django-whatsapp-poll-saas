@@ -19,7 +19,7 @@ class CustomSignUpView(CreateView):
     """
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('accounts:login')
     
     def form_valid(self, form):
         """Save the user and log them in"""
@@ -62,6 +62,9 @@ class CustomLogoutView(LogoutView):
     """
     User logout view
     """
+    next_page = '/'
+    
+
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.success(request, 'You have been logged out successfully.')

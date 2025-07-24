@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PollSaaS - Create Beautiful Polls in Minutes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-pie me-2"></i>PollSaaS
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/accounts/contact/">Contact</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-outline-primary" href="/accounts/login/">Sign In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-elements"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Create Beautiful Polls in Minutes</h1>
+                        <p class="hero-subtitle">
+                            Engage your audience with stunning, interactive polls. Get real-time insights 
+                            and make data-driven decisions faster than ever before.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="/accounts/signup/" class="btn cta-button">
+                                <i class="fas fa-rocket me-2"></i>Start Free Trial
+                            </a>
+                            <a href="#features" class="btn btn-outline-light">
+                                <i class="fas fa-play me-2"></i>Watch Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 2rem; backdrop-filter: blur(10px);">
+                            <i class="fas fa-chart-bar" style="font-size: 8rem; color: rgba(255,255,255,0.8);"></i>
+                            <div class="mt-3">
+                                <div style="height: 20px; background: rgba(255,255,255,0.3); border-radius: 10px; margin: 10px 0;"></div>
+                                <div style="height: 15px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 10px 0; width: 70%;"></div>
+                                <div style="height: 25px; background: rgba(255,255,255,0.4); border-radius: 10px; margin: 10px 0; width: 90%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">10K+</span>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <div class="stat-label">Polls Created</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">1M+</span>
+                        <div class="stat-label">Responses</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">99.9%</span>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">Why Choose PollSaaS?</h2>
+                <p class="lead text-muted">Everything you need to create, share, and analyze polls</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon primary">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Lightning Fast</h4>
+                        <p class="text-muted">Create professional polls in under 30 seconds. No technical skills required.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon success">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Real-time Analytics</h4>
+                        <p class="text-muted">Watch responses pour in live and get instant insights with beautiful charts.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon info">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Mobile Optimized</h4>
+                        <p class="text-muted">Perfect experience on any device. Your polls look great everywhere.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">Simple, Transparent Pricing</h2>
+                <p class="lead text-muted">Start free, upgrade when you need more</p>
+            </div>
+            
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="pricing-card">
+                        <h3 class="fw-bold mb-3">Free</h3>
+                        <div class="price mb-3">$0<small class="text-muted fs-6">/month</small></div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>5 polls per month</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>100 responses per poll</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Basic analytics</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Email support</li>
+                        </ul>
+                        <a href="/accounts/signup/" class="btn btn-outline-primary w-100">Get Started</a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="pricing-card featured">
+                        <div class="badge bg-primary mb-3">Most Popular</div>
+                        <h3 class="fw-bold mb-3">Premium</h3>
+                        <div class="price mb-3">$19<small class="text-muted fs-6">/month</small></div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited polls</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited responses</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Advanced analytics</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom branding</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Priority support</li>
+                        </ul>
+                        <a href="/accounts/signup/" class="btn btn-primary w-100">Start Free Trial</a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="pricing-card">
+                        <h3 class="fw-bold mb-3">Enterprise</h3>
+                        <div class="price mb-3">Custom</div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Everything in Premium</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>White-label solution</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>API access</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Dedicated support</li>
+                        </ul>
+                        <a href="/accounts/contact/" class="btn btn-outline-primary w-100">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-chart-pie me-2"></i>PollSaaS
+                    </h5>
+                    <p class="text-muted">Create beautiful polls and get instant insights from your audience.</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="fw-bold mb-3">Product</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#features" class="text-muted text-decoration-none">Features</a></li>
+                                <li><a href="#pricing" class="text-muted text-decoration-none">Pricing</a></li>
+                                <li><a href="/accounts/signup/" class="text-muted text-decoration-none">Sign Up</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="fw-bold mb-3">Support</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="/accounts/contact/" class="text-muted text-decoration-none">Contact</a></li>
+                                <li><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+                                <li><a href="#" class="text-muted text-decoration-none">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2025 PollSaaS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/landing.js' %}"></script>
+</body>
+</html>

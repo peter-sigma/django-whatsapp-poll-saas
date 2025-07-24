@@ -58,9 +58,15 @@
                                     <i class="fas fa-user me-2"></i>Profile
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                        <li class="nav-item">
+                            <form action="{% url 'accounts:logout' %}" method="post" class="dropdown-item p-0 m-0 border-0 bg-transparent">
+                             {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-start w-100">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a></li>
+                                 </button>
+                            </form>
+                        </li>
+
                             </ul>
                         </li>
                     {% else %}
