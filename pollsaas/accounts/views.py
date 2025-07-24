@@ -10,6 +10,10 @@ from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ContactForm
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
+from django.conf import settings
+
+from polls.models import Poll
 
 User = get_user_model()
 
@@ -76,11 +80,26 @@ def profile_view(request):
     User profile view
     """
     user = request.user
+    polls_qs = Poll.objects.filter(creator=user)
+
+    polls_created = polls_qs.count()
+    total_votes = polls_qs.aggregate(total=Sum('total_votes'))['total'] or 0
+
+    # Free plan limit (fallback to 1 if not set)
+    free_limit = getattr(settings, 'FREE_POLL_LIMIT', 1)
+
+    if getattr(user, 'is_premium_active', False):
+        polls_remaining = None   # template will show "Unlimited"
+    else:
+        polls_remaining = max(0, free_limit - polls_created)
     context = {
         'title': 'Profile - PollSaaS',
         'user': user,
+        'polls_created': polls_created,
+        'total_votes': total_votes,
         'polls_remaining': user.polls_remaining,
-        'is_premium': user.is_premium_active,
+        'is_premium': getattr(user, 'is_premium_active', False),
+        'premium_until': getattr(user, 'premium_until', None),
     }
     return render(request, 'accounts/profile.html', context)
 
@@ -91,13 +110,16 @@ def dashboard_view(request):
     """
     user = request.user
     # Poll statistics to be included here later
+    user_polls = Poll.objects.filter(creator=request.user)
+    total_votes = sum(p.total_votes for p in user_polls)
+    polls_remaining = 1 - user_polls.count() if not request.user.is_premium_active else None
     context = {
         'title': 'Dashboard - PollSaaS',
         'user': user,
-        'polls_created': user.polls_created,
-        'polls_remaining': user.polls_remaining,
-        'is_premium': user.is_premium_active,
-        'total_votes': 0,  # Will calculate this later
+        'polls': user_polls,
+        'polls_created': user_polls.count(),
+        'total_votes': total_votes,
+        'polls_remaining': polls_remaining,
     }
     return render(request, 'accounts/dashboard.html', context)
 

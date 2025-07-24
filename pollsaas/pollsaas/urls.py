@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Will add app URLs in coming days:
-    # path('', include('polls.urls')),
+    path('polls/', include('polls.urls')),
     path('accounts/', include(('accounts.urls'), namespace='accounts')),
     path('', TemplateView.as_view(template_name='landing.html'), name='landing'),
 ]
