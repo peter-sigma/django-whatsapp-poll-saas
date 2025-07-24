@@ -104,13 +104,13 @@ def contact_view(request):
     """
     if request.method == 'POST':
         form = ContactForm(request.POST)
-        if form.valid():
+        if form.is_valid():
             # Show success message. Later, we will send emails.
             messages.success(
                 request, 
                 'Thank you for your message! We\'ll get back to you soon.'
             )
-            return redirect('contact')
+            return redirect('accounts:contact')
     else:
         form = ContactForm()
     
