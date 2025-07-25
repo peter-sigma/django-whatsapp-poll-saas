@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ poll.title }} - Poll Details{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/poll_detail.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 fade-in">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Poll Information Card -->
+            <div class="card shadow-lg mb-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h1 class="card-title h3 mb-0">{{ poll.title }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if poll.description %}
+                    <p class="card-text text-center text-muted mb-4">{{ poll.description }}</p>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-around text-center small mb-4">
+                        <span><i class="fas fa-user-circle me-1"></i> Created by: {{ poll.creator.username }}</span>
+                        <span><i class="fas fa-clock me-1"></i> Expires: {{ poll.expires_at|date:"F d, Y" }}</span>
+                        <span><i class="fas fa-poll me-1"></i> {{ total_votes }} Vote{{ total_votes|pluralize }}</span>
+                    </div>
+
+                    <!-- Poll Voting Form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <fieldset class="mb-4">
+                            <legend class="h5 text-center mb-3">Cast Your Vote</legend>
+                            {% for choice in poll.choices.all %}
+                            <div class="form-check choice-item">
+                                <input class="form-check-input" type="radio" name="choice"
+                                    id="choice{{ forloop.counter }}" value="{{ choice.id }}" required>
+                                <label class="form-check-label" for="choice{{ forloop.counter }}">
+                                    {{ choice.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </fieldset>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg"><i
+                                    class="fas fa-check-circle me-2"></i>Submit Vote</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Poll Results Card -->
+            {% if poll.show_results or poll.is_owner %}
+            <div class="card shadow-lg mb-4">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h2 class="card-title h4 mb-0"><i class="fas fa-chart-bar me-2"></i>Poll Results</h2>
+                </div>
+                <div class="card-body">
+                    {% for choice in poll.choices.all %}
+                    <div class="result-item mb-3">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ choice.text }}</strong>
+                            <span>{{ choice.votes }} Vote{{ choice.votes|pluralize }} (
+                                {{choice.percentage|floatformat:1 }}%)</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 25px;">
+                            <div class="progress-bar bg-primary" role="progressbar"
+                                style="width: {{ choice.percentage }}%;" aria-valuenow="{{ choice.percentage }}"
+                                aria-valuemin="0" aria-valuemax="100">
+                                {{ choice.percentage|floatformat:1 }}%
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center text-muted">No votes have been cast yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Share Poll Card -->
+            <div class="card shadow-lg mb-4">
+                <div class="card-header text-center">
+                    <h3 class="card-title h5 mb-0"><i class="fas fa-share-alt me-2"></i>Share this Poll</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p class="text-muted">Share this poll with your friends and colleagues!</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="https://api.whatsapp.com/send?text={{ poll.title }}%20-%20Vote%20here:%20{{ request.build_absolute_uri }}"
+                            class="btn btn-success" target="_blank"><i class="fab fa-whatsapp me-2"></i>Share on
+                            WhatsApp</a>
+                        <button class="btn btn-outline-primary"
+                            onclick="copyToClipboard('{{ request.build_absolute_uri }}')"><i
+                                class="fas fa-copy me-2"></i>Copy Link</button>
+                    </div>
+                    <div id="copy-success" class="mt-2 text-success" style="display: none;">Link copied to clipboard!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Actions for Poll Owner -->
+            {% if poll.is_owner %}
+            <div class="card shadow-lg border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3 class="card-title h5 mb-0"><i class="fas fa-cogs me-2"></i>Admin Actions</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'poll_edit' poll.id %}" class="btn btn-warning"><i
+                                class="fas fa-edit me-2"></i>Edit Poll</a>
+                        <a href="#" class="btn btn-info"><i class="fas fa-users me-2"></i>View Voters</a>
+                        <a href="{% url 'poll_delete' poll.id %}" class="btn btn-danger"><i
+                                class="fas fa-trash-alt me-2"></i>Delete Poll</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function copyToClipboard(text) {
+        const el = document.createElement('textarea');
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        const copySuccess = document.getElementById('copy-success');
+        copySuccess.style.display = 'block';
+        setTimeout(() => {
+            copySuccess.style.display = 'none';
+        }, 2000);
+    }
+</script>
+{% endblock %}

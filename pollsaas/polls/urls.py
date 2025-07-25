@@ -4,12 +4,6 @@ from . import views
 app_name = 'polls'
 
 urlpatterns = [
-    # Poll management URLs
-    path('', views.poll_list, name='poll_list'),
-    path('create/', views.poll_create, name='poll_create'),
-    path('poll/<slug:slug>/', views.poll_detail, name='poll_detail'),
-    path('poll/<slug:slug>/edit/', views.poll_edit, name='poll_edit'),
-    path('poll/<slug:slug>/delete/', views.poll_delete, name='poll_delete'),
     
     # Public voting URLs
     path('vote/<slug:slug>/', views.vote, name='vote'),
@@ -22,4 +16,22 @@ urlpatterns = [
     # Admin/management URLs
     path('poll/<slug:slug>/analytics/', views.poll_analytics, name='poll_analytics'),
     path('poll/<slug:slug>/export/', views.poll_export, name='poll_export'),
+
+
+    path('quick/', views.quick_poll_view, name='quick_poll'),
+    path('create-class/', views.PollCreateView.as_view(), name='create_poll_class'),
+    
+    # Poll management
+    path('poll/<slug:slug>/', views.poll_detail_view, name='poll_detail'),
+    path('poll/<slug:slug>/edit/', views.PollEditView.as_view(), name='edit_poll'),
+    path('poll/<slug:slug>/preview/', views.poll_preview_view, name='poll_preview'),
+    path('poll/<slug:slug>/publish/', views.publish_poll_view, name='publish_poll'),
+    path('poll/<slug:slug>/delete/', views.delete_poll_view, name='delete_poll'),
+    path('poll/<slug:slug>/toggle/', views.toggle_poll_status_view, name='toggle_poll'),
+    path('poll/<slug:slug>/success/', views.poll_success_view, name='poll_success'),
+    
+    # API endpoints
+    path('api/poll/<slug:slug>/stats/', views.poll_stats_api, name='poll_stats_api'),
+    path('api/poll/<slug:slug>/share-stats/', views.poll_share_stats, name='poll_share_stats'),
+    
 ]

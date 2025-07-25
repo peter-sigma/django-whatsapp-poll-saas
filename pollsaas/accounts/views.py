@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,6 +12,11 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm, ContactForm
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.conf import settings
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from django.utils import timezone
 
 from polls.models import Poll
 
@@ -108,21 +113,140 @@ def dashboard_view(request):
     """
     User dashboard view
     """
+   
     user = request.user
     # Poll statistics to be included here later
-    user_polls = Poll.objects.filter(creator=request.user)
+    user_polls = Poll.objects.filter(creator=request.user).order_by('-created_at')
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        polls_list = polls_list.filter(
+            Q(title__icontains=search_query) | 
+            Q(description__icontains=search_query)
+        )
+    
+    # Filter by status
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        polls_list = polls_list.filter(status=status_filter)
+    
+    # Pagination
+    paginator = Paginator(user_polls, 10)
+    page_number = request.GET.get('page')
+    polls = paginator.get_page(page_number)
     total_votes = sum(p.total_votes for p in user_polls)
     polls_remaining = 1 - user_polls.count() if not request.user.is_premium_active else None
+
+
+    # Statistics
+    total_polls = Poll.objects.filter(creator=request.user).count()
+    active_polls = Poll.objects.filter(creator=request.user, status='active').count()
+    total_votes = sum(poll.total_votes for poll in Poll.objects.filter(creator=request.user))
+
     context = {
         'title': 'Dashboard - PollSaaS',
         'user': user,
         'polls': user_polls,
-        'polls_created': user_polls.count(),
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'total_polls': total_polls,
+        'active_polls': active_polls,
         'total_votes': total_votes,
         'polls_remaining': polls_remaining,
+        'is_premium': request.user.is_premium,
+        'max_polls': 50 if request.user.is_premium else 1,
     }
     return render(request, 'accounts/dashboard.html', context)
 
+
+@login_required
+@require_http_methods(["POST"])
+def delete_poll_view(request, slug):
+    """
+    Delete a poll (with confirmation)
+    """
+    poll = get_object_or_404(Poll, slug=slug, creator=request.user)
+    
+    poll_title = poll.title
+    poll.delete()
+    
+    # Update user's poll count
+    request.user.polls_created = max(0, request.user.polls_created - 1)
+    request.user.save(update_fields=['polls_created'])
+    
+    messages.success(request, f'🗑️ Poll "{poll_title}" has been deleted.')
+    return redirect('polls:dashboard')
+
+
+@login_required
+@require_http_methods(["POST"])
+def toggle_poll_status_view(request, slug):
+    """
+    Toggle poll active/inactive status
+    """
+    poll = get_object_or_404(Poll, slug=slug, creator=request.user)
+    
+    poll.is_active = not poll.is_active
+    poll.save(update_fields=['is_active'])
+    
+    status = "activated" if poll.is_active else "deactivated"
+    messages.success(request, f'✅ Poll "{poll.title}" has been {status}.')
+    
+    return redirect('polls:poll_detail', slug=slug)
+
+@require_http_methods(["GET"])
+def poll_stats_api(request, slug):
+    """
+    API endpoint for real-time poll statistics
+    """
+    poll = get_object_or_404(Poll, slug=slug)
+    
+    # Check if user can view results
+    if not poll.show_results and poll.creator != request.user:
+        return JsonResponse({'error': 'Results not available'}, status=403)
+    
+    choices_data = []
+    for choice in poll.choices.all():
+        choices_data.append({
+            'id': choice.id,
+            'text': choice.text,
+            'votes': choice.votes,
+            'percentage': choice.vote_percentage,
+        })
+    
+    data = {
+        'poll_id': poll.id,
+        'title': poll.title,
+        'total_votes': poll.total_votes,
+        'unique_voters': poll.unique_voters,
+        'choices': choices_data,
+        'is_active': poll.is_active,
+        'can_vote': poll.can_vote,
+        'expires_at': poll.expires_at.isoformat() if poll.expires_at else None,
+        'last_updated': timezone.now().isoformat(),
+    }
+    
+    return JsonResponse(data)
+
+
+def poll_share_stats(request, slug):
+    """
+    Public stats for sharing (limited data)
+    """
+    poll = get_object_or_404(Poll, slug=slug)
+    
+    if not poll.show_results:
+        return JsonResponse({'error': 'Results not public'}, status=403)
+    
+    data = {
+        'title': poll.title,
+        'total_votes': poll.total_votes,
+        'choices_count': poll.choices.count(),
+        'is_active': poll.can_vote,
+        'created_at': poll.created_at.date().isoformat(),
+    }
+    
+    return JsonResponse(data)
 def contact_view(request):
     """
     Contact form view

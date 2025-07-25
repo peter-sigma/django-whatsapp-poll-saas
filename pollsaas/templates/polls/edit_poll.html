@@ -1,0 +1,187 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Edit Poll - PollSaaS{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/create_poll.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center fade-in">
+    <div class="col-lg-9 col-md-10">
+        <div class="card shadow-lg p-lg-5 p-md-4 p-3 border-0">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4 text-primary fw-bold">
+                    <i class="fas fa-edit me-2"></i>Edit Poll
+                </h1>
+                <p class="text-center text-muted mb-5">
+                    Update your poll details below and save changes.
+                </p>
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">{{ form.title.label }}
+                            <span class="text-danger">*</span></label>
+                        {{ form.title }}
+                        {% if form.title.help_text %}
+                        <div class="form-text">{{ form.title.help_text }}</div>
+                        {% endif %}
+                        {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                            {{ form.description.label }}</label>
+                        {{ form.description }}
+                        {% if form.description.help_text %}
+                        <div class="form-text">{{ form.description.help_text }}</div>
+                        {% endif %}
+                        {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Choices (Read-only or disabled if you don't allow editing choices) -->
+                    <div class="mb-4">
+                        <label for="{{ form.choices.id_for_label }}" class="form-label fw-bold">
+                            {{ form.choices.label }}
+                        </label>
+                        {{ form.choices }}
+                        <small class="text-muted d-block">You can modify choices if needed (one per line).</small>
+                        {% if form.choices.errors %}
+                        {% for error in form.choices.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.poll_type.id_for_label }}" class="form-label fw-bold">
+                        {{ form.poll_type.label }}</label>
+                        {{ form.poll_type }}
+                        {% if form.poll_type.errors %}
+                        {% for error in form.poll_type.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.expires_in_days.id_for_label }}" class="form-label fw-bold">
+                        {{ form.expires_in_days.label }}</label>
+                        {{ form.expires_in_days }}
+                        {% if form.expires_in_days.errors %}
+                        {% for error in form.expires_in_days.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="form-check form-switch">
+                                {{ form.allow_multiple_votes }}
+                                <label class="form-check-label" for="{{ form.allow_multiple_votes.id_for_label }}">
+                                    {{ form.allow_multiple_votes.label }}
+                                </label>
+                                {% if form.allow_multiple_votes.errors %}
+                                {% for error in form.allow_multiple_votes.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch">
+                                {{ form.show_results }}
+                                <label class="form-check-label" for="{{ form.show_results.id_for_label }}">
+                                    {{ form.show_results.label }}</label>
+                                {% if form.show_results.errors %}
+                                {% for error in form.show_results.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="form-check form-switch">
+                                {{ form.require_login }}
+                                <label class="form-check-label" for="{{ form.require_login.id_for_label }}">
+                                    {{ form.require_login.label }}</label>
+                                {% if form.require_login.errors %}
+                                {% for error in form.require_login.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch">
+                                {{ form.allow_anonymous }}
+                                <label class="form-check-label" for="{{ form.allow_anonymous.id_for_label }}">
+                                    {{ form.allow_anonymous.label }}</label>
+                                {% if form.allow_anonymous.errors %}
+                                {% for error in form.allow_anonymous.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pollTypeSelect = document.getElementById('{{ form.poll_type.id_for_label }}');
+        const allowMultipleVotesCheckbox = document.getElementById('{{ form.allow_multiple_votes.id_for_label }}');
+        const allowMultipleVotesContainer = allowMultipleVotesCheckbox.closest('.form-check');
+
+        function toggleMultipleVotesField() {
+            if (pollTypeSelect.value === 'yes_no') {
+                allowMultipleVotesContainer.style.display = 'none';
+                allowMultipleVotesCheckbox.checked = false;
+            } else {
+                allowMultipleVotesContainer.style.display = 'block';
+            }
+        }
+
+        toggleMultipleVotesField();
+        pollTypeSelect.addEventListener('change', toggleMultipleVotesField);
+    });
+</script>
+{% endblock %}

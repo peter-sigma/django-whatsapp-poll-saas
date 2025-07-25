@@ -1,0 +1,46 @@
+/* Custom styles for create_poll.html */
+
+/* Enhance form elements */
+.form-label {
+    font-size: 1.05rem;
+    color: #333;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.invalid-feedback {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Specific styling for checkbox switches */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(37, 211, 102, 0.25);
+}
+
+/* Adjust textarea height for choices */
+textarea#id_choices {
+    min-height: 180px;
+    /* Make it taller for better input */
+    resize: vertical;
+    /* Allow vertical resizing */
+}
+
+/* Style for disabled premium features in form */
+.form-check-input[disabled]+.form-check-label {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-check-input[disabled]+.form-check-label~.form-text {
+    color: var(--danger-color);
+    font-weight: bold;
+}
