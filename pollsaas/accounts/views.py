@@ -143,6 +143,8 @@ def dashboard_view(request):
     active_polls = Poll.objects.filter(creator=request.user, status='active').count()
     total_votes = sum(poll.total_votes for poll in Poll.objects.filter(creator=request.user))
 
+    
+
     context = {
         'title': 'Dashboard - PollSaaS',
         'user': user,
